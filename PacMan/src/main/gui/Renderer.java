@@ -1,0 +1,299 @@
+package main.gui;
+
+import java.awt.image.DataBufferInt;
+
+
+import main.GameContainer;
+import main.game.Position;
+import main.gui.gfx.Image;
+
+public class Renderer {
+	
+	private int pW, pH;
+	private static int p[];
+	
+	Image NULL = new Image("/Null.png");
+	
+	Image COIN = new Image("/Coin.png");
+	Image POWER_CELL = new Image("/PowerCell.png");
+	
+	Image WALL_E_W = new Image("/WallEW.png");
+	Image WALL_N_S = new Image("/WallNS.png");
+	Image WALL_N_E = new Image("/WallNE.png");
+	Image WALL_N_W = new Image("/WallNW.png");
+	Image WALL_S_E = new Image("/WAllSE.png");
+	Image WALL_W_S = new Image("/WallWS.png");
+	
+	Image WALL_W_ES = new Image("/WallEW-S.png");
+	Image WALL_E_WS = new Image("/WallWE-S.png");
+	Image WALL_N_S_TOP_LEFT = new Image("/WallNSTop.png");
+	Image WALL_N_S_TOP_RIGHT = new Image("/WallNSTopLeft.png");
+	Image WALL_N_S_DOWN_RIGHT = new Image("/WallNSDownRight.png");
+	Image WALL_N_S_DOWN_LEFT = new Image("/WallNSDownLeft.png");
+	
+	Image WALL_CIRC_DOWN_LEFT = new Image("/WallCircSE.png");
+	Image WALL_CIRC_DOWN_RIGHT = new Image("/WallCIRCWS.png");
+	Image WALL_CIRC_TOP_LEFT = new Image("/WallCircNW.png");
+	Image WALL_CIRC_TOP_RIGHT = new Image("/WallCircEN.png");
+	
+	Image WALL_QUAT_CIRC_DL = new Image("/WallQuatCircDownLeft.png");
+	Image WALL_QUAT_CIRC_DR = new Image("/WallQuatCircDownRight.png");
+	Image WALL_QUAT_CIRC_UL = new Image("/WallQuatCircUpLeft.png");
+	Image WALL_QUAT_CIRC_UR = new Image("/WallQuatCircUpRight.png");
+	
+	Image WALL_N_S_LEFT = new Image("/WallNSrightOpen.png");
+	Image WALL_N_S_RIGHT = new Image("/WALLNSleftOpen.png");
+	Image WALL_E_W_UP = new Image("/WALLTop.png");
+	Image WALL_E_W_DOWN = new Image("/WALLDown.png");
+	
+	Image HOUSE_TOP_RIGHT = new Image("/HouseCornerTopRight.png");
+	Image HOUSE_TOP_LEFT = new Image("/HouseCornerTopLeft.png");
+	Image HOUSE_BOTTOM_RIGHT = new Image("/HouseCornerBottomRight.png");
+	Image HOUSE_BOTTOM_LEFT = new Image("/HouseCornerBottomLeft.png");
+	Image HOUSE_DORR_LEFT = new Image("/HouseDoorLeft.png");
+	Image HOUSE_DORR_RIGHT = new Image("/HouseDoorRight.png");
+	
+	public Renderer(GameContainer gc) {
+		
+		pW = gc.game.WIDTH;
+		pH = gc.game.HEIGHT;
+		p = ((DataBufferInt) gc.getGUI().getImage().getRaster().getDataBuffer()).getData();
+		
+	}
+	
+	
+	private Image[][] world = {
+			//1
+			{WALL_S_E, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W,
+				WALL_E_W, WALL_E_W, WALL_W_ES, WALL_E_WS, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W,
+				WALL_E_W, WALL_E_W, WALL_E_W, WALL_W_S
+			},
+			
+			//2
+			{WALL_N_S, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+				NULL,  WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, WALL_N_S},
+			//3
+			{WALL_N_S, NULL, WALL_CIRC_DOWN_LEFT, WALL_E_W_UP, WALL_E_W_UP, WALL_CIRC_DOWN_RIGHT, NULL, WALL_CIRC_DOWN_LEFT, WALL_E_W_UP, WALL_E_W_UP, WALL_E_W_UP, 
+					WALL_CIRC_DOWN_RIGHT, NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT,  NULL,  WALL_CIRC_DOWN_LEFT, WALL_E_W_UP, WALL_E_W_UP, WALL_E_W_UP, 
+					WALL_CIRC_DOWN_RIGHT, NULL, WALL_CIRC_DOWN_LEFT, WALL_E_W_UP, WALL_E_W_UP, WALL_CIRC_DOWN_RIGHT, NULL, WALL_N_S},
+			//4
+			{WALL_N_S, NULL, WALL_N_S_LEFT, NULL, NULL, WALL_N_S_RIGHT, NULL, WALL_N_S_LEFT, NULL, NULL, NULL, WALL_N_S_RIGHT, 
+				NULL,  WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, WALL_N_S_LEFT, NULL, NULL, NULL, WALL_N_S_RIGHT, NULL, WALL_N_S_LEFT, NULL, NULL,
+				WALL_N_S_RIGHT, NULL, WALL_N_S},
+			
+			//5
+			{WALL_N_S, NULL, WALL_CIRC_TOP_LEFT, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_CIRC_TOP_RIGHT, NULL, WALL_CIRC_TOP_LEFT, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_E_W_DOWN, 
+						WALL_CIRC_TOP_RIGHT, NULL, WALL_CIRC_TOP_LEFT, WALL_CIRC_TOP_RIGHT,  NULL,  WALL_CIRC_TOP_LEFT, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_E_W_DOWN, 
+						WALL_CIRC_TOP_RIGHT, NULL, WALL_CIRC_TOP_LEFT, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_CIRC_TOP_RIGHT, NULL, WALL_N_S},
+			//6
+			{WALL_N_S, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+				NULL,  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, WALL_N_S},
+			//7
+			{WALL_N_S, NULL, WALL_CIRC_DOWN_LEFT, WALL_E_W_UP, WALL_E_W_UP, WALL_CIRC_DOWN_RIGHT, NULL, WALL_CIRC_DOWN_LEFT, WALL_CIRC_DOWN_RIGHT, NULL,
+					WALL_CIRC_DOWN_LEFT,  WALL_E_W_UP, WALL_E_W_UP, WALL_E_W_UP, WALL_E_W_UP, WALL_E_W_UP, WALL_E_W_UP, WALL_CIRC_DOWN_RIGHT, NULL,
+					WALL_CIRC_DOWN_LEFT, WALL_CIRC_DOWN_RIGHT, NULL, WALL_CIRC_DOWN_LEFT, WALL_E_W_UP, WALL_E_W_UP, WALL_CIRC_DOWN_RIGHT, NULL, WALL_N_S},
+			//8
+			{WALL_N_S, NULL, WALL_CIRC_TOP_LEFT, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_CIRC_TOP_RIGHT, NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT,
+						NULL, WALL_CIRC_TOP_LEFT, WALL_E_W_DOWN, WALL_E_W_DOWN, 
+						WALL_QUAT_CIRC_DL,  WALL_QUAT_CIRC_DR, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_CIRC_TOP_RIGHT,
+						NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, WALL_CIRC_TOP_LEFT, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_CIRC_TOP_RIGHT, NULL, WALL_N_S},
+			//9
+			{WALL_N_S, NULL, NULL, NULL, NULL, NULL, NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, NULL, NULL, NULL,
+				WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, NULL, NULL, NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, NULL, NULL, NULL, NULL, NULL, WALL_N_S},
+			
+			//10
+			{WALL_N_E, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_W_S, NULL, WALL_N_S_LEFT, WALL_QUAT_CIRC_UR, WALL_E_W_UP, WALL_E_W_UP, WALL_CIRC_DOWN_RIGHT, 
+				NULL,  WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, WALL_CIRC_DOWN_LEFT, WALL_E_W_UP, WALL_E_W_UP, WALL_QUAT_CIRC_UL, WALL_N_S_RIGHT, NULL, WALL_S_E,
+				WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_N_W},
+			
+			//11
+			{NULL, NULL, NULL, NULL, NULL, WALL_N_S, NULL, WALL_N_S_LEFT, WALL_QUAT_CIRC_DR, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_CIRC_TOP_RIGHT, 
+				NULL,  WALL_CIRC_TOP_LEFT, WALL_CIRC_TOP_RIGHT, NULL, WALL_CIRC_TOP_LEFT, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_QUAT_CIRC_DL, WALL_N_S_RIGHT, NULL, WALL_N_S,
+				NULL, NULL, NULL, NULL, NULL},
+			//12
+			{NULL, NULL, NULL, NULL, NULL, WALL_N_S, NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, NULL, NULL, 
+					NULL,  NULL, NULL, NULL, NULL, NULL, NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, WALL_N_S,
+					NULL, NULL, NULL, NULL, NULL},
+			//13
+			{NULL, NULL, NULL, NULL, NULL, WALL_N_S, NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, HOUSE_TOP_RIGHT, WALL_E_W, 
+						HOUSE_DORR_LEFT,  NULL, NULL, HOUSE_DORR_RIGHT, WALL_E_W, HOUSE_TOP_LEFT, NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, WALL_N_S,
+					NULL, NULL, NULL, NULL, NULL},
+			//14
+			{WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_N_W, NULL, WALL_CIRC_TOP_LEFT, WALL_CIRC_TOP_RIGHT, NULL, WALL_N_S, NULL, 
+						NULL,  NULL, NULL, NULL, NULL, WALL_N_S, NULL, WALL_CIRC_TOP_LEFT, WALL_CIRC_TOP_RIGHT, NULL, WALL_N_E,
+						WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W},
+			
+			//15
+			{NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, WALL_N_S, NULL, 
+							NULL,  NULL, NULL, NULL, NULL, WALL_N_S, NULL, NULL, NULL, NULL, NULL,
+							NULL, NULL, NULL, NULL, NULL},
+			//16
+			{WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_W_S, NULL, WALL_CIRC_DOWN_LEFT, WALL_CIRC_DOWN_RIGHT, NULL, WALL_N_S, NULL, 
+								NULL,  NULL, NULL, NULL, NULL, WALL_N_S, NULL, WALL_CIRC_DOWN_LEFT, WALL_CIRC_DOWN_RIGHT, NULL, WALL_S_E,
+								WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W},
+			//17
+			{NULL, NULL, NULL, NULL, NULL, WALL_N_S, NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, HOUSE_BOTTOM_LEFT, WALL_E_W, 
+									WALL_E_W,  WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, HOUSE_BOTTOM_RIGHT, NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, WALL_N_S,
+								NULL, NULL, NULL, NULL, NULL},
+			
+			//18
+			{NULL, NULL, NULL, NULL, NULL, WALL_N_S, NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, NULL, NULL, 
+					NULL,  NULL, NULL, NULL, NULL, NULL, NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, WALL_N_S,
+					NULL, NULL, NULL, NULL, NULL},
+			
+			//19
+			{NULL, NULL, NULL, NULL, NULL, WALL_N_S, NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, WALL_CIRC_DOWN_LEFT, WALL_E_W_UP, 
+						WALL_E_W_UP,  WALL_E_W_UP, WALL_E_W_UP, WALL_E_W_UP, WALL_E_W_UP, WALL_CIRC_DOWN_RIGHT, NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, WALL_N_S,
+					NULL, NULL, NULL, NULL, NULL},
+			
+			//20
+			{WALL_S_E, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_N_W, NULL, WALL_CIRC_TOP_LEFT, WALL_CIRC_TOP_RIGHT, NULL,
+						WALL_CIRC_TOP_LEFT, WALL_E_W_DOWN, WALL_E_W_DOWN,  WALL_QUAT_CIRC_DL, WALL_QUAT_CIRC_DR, WALL_E_W_DOWN, WALL_E_W_DOWN,
+						WALL_CIRC_TOP_RIGHT, NULL, WALL_CIRC_TOP_LEFT, WALL_CIRC_TOP_RIGHT, NULL, WALL_N_E,
+						WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_W_S},
+			
+			//21
+			{WALL_N_S, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+							NULL,  WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, WALL_N_S},
+			
+			//22
+			{WALL_N_S, NULL, WALL_CIRC_DOWN_LEFT, WALL_E_W_UP, WALL_E_W_UP, WALL_CIRC_DOWN_RIGHT, NULL,
+								WALL_CIRC_DOWN_LEFT, WALL_E_W_UP, WALL_E_W_UP, WALL_E_W_UP, WALL_CIRC_DOWN_RIGHT, 
+								NULL,  WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL,
+								WALL_CIRC_DOWN_LEFT, WALL_E_W_UP, WALL_E_W_UP, WALL_E_W_UP, WALL_CIRC_DOWN_RIGHT,
+								NULL, WALL_CIRC_DOWN_LEFT, WALL_E_W_UP, WALL_E_W_UP, WALL_CIRC_DOWN_RIGHT, NULL, WALL_N_S},
+			
+			//23
+			{WALL_N_S, NULL, WALL_CIRC_TOP_LEFT, WALL_E_W_DOWN, WALL_QUAT_CIRC_DL, WALL_N_S_RIGHT, NULL,
+								WALL_CIRC_TOP_LEFT, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_CIRC_TOP_RIGHT, 
+								NULL,  WALL_CIRC_TOP_LEFT, WALL_CIRC_TOP_RIGHT, NULL,
+								WALL_CIRC_TOP_LEFT, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_CIRC_TOP_RIGHT,
+								NULL, WALL_N_S_LEFT, WALL_QUAT_CIRC_DR, WALL_E_W_DOWN, WALL_CIRC_TOP_RIGHT, NULL, WALL_N_S},
+			
+			//24
+			{WALL_N_S, NULL, NULL, NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL,NULL, NULL, NULL, NULL, NULL, 
+								NULL,  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+								NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, NULL, NULL, WALL_N_S},
+			
+			//25
+			{WALL_N_S_TOP_LEFT, WALL_E_W_UP, WALL_CIRC_DOWN_RIGHT, NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, 
+								WALL_CIRC_DOWN_LEFT, WALL_CIRC_DOWN_RIGHT, NULL,
+								WALL_CIRC_DOWN_LEFT, WALL_E_W_UP, WALL_E_W_UP,  WALL_E_W_UP, WALL_E_W_UP, WALL_E_W_UP, WALL_E_W_UP, WALL_CIRC_DOWN_RIGHT, NULL,
+								WALL_CIRC_DOWN_LEFT, WALL_CIRC_DOWN_RIGHT, NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL,
+								WALL_CIRC_DOWN_LEFT, WALL_E_W_UP, WALL_N_S_TOP_RIGHT},
+			
+			//26
+			{WALL_N_S_DOWN_LEFT, WALL_E_W_DOWN, WALL_CIRC_TOP_RIGHT, NULL, WALL_CIRC_TOP_LEFT, WALL_CIRC_TOP_RIGHT, NULL,
+								WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL,
+								WALL_CIRC_TOP_LEFT, WALL_E_W_DOWN, WALL_E_W_DOWN,  WALL_QUAT_CIRC_DL, WALL_QUAT_CIRC_DR, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_CIRC_TOP_RIGHT,
+								NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT,
+								NULL, WALL_CIRC_TOP_LEFT, WALL_CIRC_TOP_RIGHT, NULL, WALL_CIRC_TOP_LEFT, WALL_E_W_DOWN, WALL_N_S_DOWN_RIGHT},
+			
+			//27
+			{WALL_N_S, NULL, NULL, NULL, NULL, NULL, NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, NULL, NULL, NULL,
+								WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, NULL, NULL, NULL, WALL_N_S_LEFT, WALL_N_S_RIGHT,
+								NULL, NULL, NULL, NULL, NULL, NULL, WALL_N_S},
+			
+			//28
+			{WALL_N_S, NULL, WALL_CIRC_DOWN_LEFT, WALL_E_W_UP, WALL_E_W_UP, WALL_E_W_UP, WALL_E_W_UP, WALL_QUAT_CIRC_UL, WALL_QUAT_CIRC_UR,
+								WALL_E_W_UP, WALL_E_W_UP, WALL_CIRC_DOWN_RIGHT, NULL,
+								WALL_N_S_LEFT, WALL_N_S_RIGHT, NULL, WALL_CIRC_DOWN_LEFT, WALL_E_W_UP, WALL_E_W_UP, WALL_QUAT_CIRC_UL, WALL_QUAT_CIRC_UR,
+								WALL_E_W_UP, WALL_E_W_UP, WALL_E_W_UP, WALL_E_W_UP, WALL_CIRC_DOWN_RIGHT, NULL, WALL_N_S},
+			
+			//29
+			{WALL_N_S, NULL, WALL_CIRC_TOP_LEFT, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_E_W_DOWN,
+								WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_CIRC_TOP_RIGHT, NULL,
+								WALL_CIRC_TOP_LEFT, WALL_CIRC_TOP_RIGHT, NULL,
+								WALL_CIRC_TOP_LEFT, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_E_W_DOWN,
+								WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_E_W_DOWN, WALL_CIRC_TOP_RIGHT, NULL, WALL_N_S},
+			
+			//30
+			{WALL_N_S, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+								NULL,  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, WALL_N_S},
+			//1
+			{WALL_N_E, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W,
+				WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W, WALL_E_W,
+				WALL_E_W, WALL_E_W, WALL_E_W, WALL_N_W
+			},
+	};
+	
+	
+	public void clear() {
+		
+		for(int i = 0; i < p.length; i++) {
+			
+			p[i] = 0;
+			//p[i] += i;
+		}
+		
+		Position drawPos = new Position();
+		
+		for(int x = 0; x <= 27; ++x) {
+			for(int y = 0; y <= 30; ++y) {
+				
+				drawPos.setX(x);
+				drawPos.setY(y);
+				if(world[y]!= null && world[y][x] != null){
+
+					drawImmage(world[y][x], drawPos.toPixel(1), drawPos.toPixel(0));
+				}
+			}
+		}
+		
+	}
+	
+	
+	
+	
+	
+	public void setPixel(int x, int y, int value) {
+		if(x < 0 || x >= pW || y < 0 || y >= pH || value == 0xffff00ff) {
+			return;
+		}
+		
+		
+		p[x + y * pW] = value;
+	}
+	
+	
+	public void drawImmage(Image image, int offX, int offY) {
+		
+		for(int y = 0; y < image.getHeight(); y++) {
+			
+			for(int x = 0; x < image.getWidth(); x++) {
+				
+				setPixel(x + offX, y + offY, image.getP()[x + y * image.getWidth()]);
+				
+			}
+		}
+		
+	}
+	
+	public void drawCoins(int[][] world) {
+		
+		Position drawPos = new Position();
+		
+		for(int y = 0; y < world.length; y++) {
+			for(int x = 0; x < world[y].length; ++x) {
+				if(world[y][x] == 2) {
+					drawPos.setX(x);
+					drawPos.setY(y);
+					
+					drawImmage(COIN, drawPos.toPixel(1), drawPos.toPixel(0));
+				} else if(world[y][x] == 3) {
+					drawPos.setX(x);
+					drawPos.setY(y);
+					
+					drawImmage(POWER_CELL, drawPos.toPixel(1), drawPos.toPixel(0));
+				}
+			}
+		}
+		
+		
+	}
+
+	
+	
+	
+	
+}
